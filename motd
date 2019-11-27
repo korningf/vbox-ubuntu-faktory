@@ -1,0 +1,19 @@
+
+#==============================================================================#
+# Ubuntu 18 (Eoan) Linux, Vagrant provisioner, VirtualBox machine, x64 arch.
+#------------------------------------------------------------------------------#
+
+                                                                   X
+                                                                   X
+  XXXXX  XXX XXX  XXXX   XXXXXX  XXX X   XXX XXX XXX XXX  XXXXX   XXXX    XXXXX
+ X     X  X   X       X   X    X  X X X   X   X   X   X  X     X   X     X     X
+  XXX     X X X   XXXXX   X    X  X X X   X   X   X   X  X     X   X     XXXXXXX
+     XX   X X X  X    X   X    X  X X X    X X     X X   X     X   X     X
+ X     X   X X   X    X   X    X  X X X    X X     X X   X     X   X  X  X     X
+  XXXXX    X X    XXXX X  XXXXX  XX X XX    X       X     XXXXX     XX    XXXXX
+                          X                 X
+                         XXX              XX
+
+#------------------------------------------------------------------------------#
+# (c) swapmyvote 2019.  Swapmyvote development vm ruby-2.6.5, rvm, rails, gems
+#==============================================================================#
