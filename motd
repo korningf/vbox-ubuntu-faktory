@@ -1,19 +1,17 @@
 
 #==============================================================================#
-# Ubuntu 18 (Eoan) Linux, Vagrant provisioner, VirtualBox machine, x64 arch.
+# Ubuntu 20 (Focal) Linux, Vagrant provisioner, VirtualBox machine, x64 arch.
 #------------------------------------------------------------------------------#
 
-                                                                   X
-                                                                   X
-  XXXXX  XXX XXX  XXXX   XXXXXX  XXX X   XXX XXX XXX XXX  XXXXX   XXXX    XXXXX
- X     X  X   X       X   X    X  X X X   X   X   X   X  X     X   X     X     X
-  XXX     X X X   XXXXX   X    X  X X X   X   X   X   X  X     X   X     XXXXXXX
-     XX   X X X  X    X   X    X  X X X    X X     X X   X     X   X     X
- X     X   X X   X    X   X    X  X X X    X X     X X   X     X   X  X  X     X
-  XXXXX    X X    XXXX X  XXXXX  XX X XX    X       X     XXXXX     XX    XXXXX
-                          X                 X
-                         XXX              XX
+                                  _____        __      __                        
+      _____ _____    ____  __ ___/ ____\____  |  | ___/  |_ __ _________   ____  
+     /     \\__  \  /    \|  |  \   __\\__  \ |  |/ /\   __\  |  \_  __ \_/ __ \ 
+    |  Y Y  \/ __ \|   |  \  |  /|  |   / __ \|    <  |  | |  |  /|  | \/\  ___/ 
+    |__|_|  (____  /___|  /____/ |__|  (____  /__|_ \ |__| |____/ |__|    \___  >
+          \/     \/     \/                  \/     \/                         \/ 
 
 #------------------------------------------------------------------------------#
-# (c) swapmyvote 2019.  Swapmyvote development vm ruby-2.6.5, rvm, rails, gems
+# (c) Francis Korning 2024. Manufakture dev VM: POSIX Java Ruby Python Postgres
 #==============================================================================#
+    
+    

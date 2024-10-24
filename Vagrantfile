@@ -19,12 +19,12 @@ Vagrant.configure("2") do |config|
   # Image: select virtual machine image (may be architecture specific)
   #--------------------------------------------------------------------------------------#
   # Mac OSX (Intel):
-  # config.vm.box = "ubuntu/eoan64"
+  # config.vm.box = "ubuntu/focal64"
   # 
   # Intel x86-64:
-  # config.vm.box = "ubuntu/eoan64"
+  # config.vm.box = "ubuntu/focal64"
   #======================================================================================#
-  config.vm.box = "ubuntu/eoan64"
+  config.vm.box = "ubuntu/focal64"
 
 
   #======================================================================================#
@@ -38,7 +38,7 @@ Vagrant.configure("2") do |config|
   #======================================================================================#
   # Machine: Customizations for machine (memory, etc)
   #--------------------------------------------------------------------------------------#
-  # vb.memory = "2048"
+  # vb.memory = "4096"
   #======================================================================================#
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -53,20 +53,20 @@ Vagrant.configure("2") do |config|
   #   vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
+  #   vb.memory = "2048"
   # end
   #
 
   config.vm.provider "virtualbox" do |vb|
-  	
-     # Custom VM name "ubuntu-eoan-swapmyvote"
-  	vb.name = "ubuntu-eoan-swapmyvote"
-  	
+     
+     # Custom VM name "ubuntu-focal-manufakture"
+     vb.name = "ubuntu-focal-manufakture"
+     
      # Display the VirtualBox GUI when booting the machine
      vb.gui = true
   
      # Customize the amount of memory on the VM:
-     vb.memory = "2048" 
+     vb.memory = "4096" 
   end
 
   
@@ -76,7 +76,7 @@ Vagrant.configure("2") do |config|
   #--------------------------------------------------------------------------------------#
   # config.vbguest.auto_update = true
   #======================================================================================#
-  config.vbguest.auto_update = false
+  config.vbguest.auto_update = true
   
     
   # Disable automatic box update checking. If you disable this, then
@@ -85,17 +85,19 @@ Vagrant.configure("2") do |config|
   # config.vm.box_check_update = false
 
 
+
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # NOTE: This will enable public access to the opened port
   # config.vm.network "forwarded_port", guest: 80, host: 8080
 
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine and only allow access
-  # via 127.0.0.1 to disable public access
-  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+  #======================================================================================#
+  # NAT forward port mappings 
+  #--------------------------------------------------------------------------------------#
+  # config.vm.network "forwarded_port", guest: 22, host: 2222
+  #======================================================================================#
+  #config.vm.network "forwarded_port", guest: 3000, host: 3333
 
 
   # Create a private network, which allows host-only access to the machine
@@ -132,7 +134,7 @@ Vagrant.configure("2") do |config|
   #--------------------------------------------------------------------------------------#
   # Directories: configure directories for mounting shared folders 
   #--------------------------------------------------------------------------------------#
-  # config.vm.provision "shell", "mkdir -p /work/src/scentrics"
+  # config.vm.provision "shell", "mkdir -p /work/manufakture"
   #======================================================================================#
   config.vm.provision "shell", inline: <<-SHELL
 
@@ -140,10 +142,41 @@ Vagrant.configure("2") do |config|
     echo "resizing root filesystem"
     resize2fs /dev/sda1
 
+
     echo ""  
     echo "creating shared folders"
     mkdir -p /vagrant
     mkdir -p /mnt/work
+    
+    
+    echo ""  
+    echo "registering package repositories"
+    echo "deb http://uk.archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse"               > /etc/apt/sources.list
+    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse"           >> /etc/apt/sources.list
+    echo "deb http://uk.archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse"      >> /etc/apt/sources.list
+    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse"  >> /etc/apt/sources.list
+    echo "deb http://uk.archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse"       >> /etc/apt/sources.list
+    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse"   >> /etc/apt/sources.list
+    apt-get update
+
+
+    echo ""  
+    echo "adding apt repository tools"
+    apt-get -y install apt-transport-https ca-certificates
+    apt-get -y install software-properties-common python-software-properties
+    apt-get update
+
+
+    echo ""
+    echo "installing virtualbox extensions"
+    apt-get -y upgrade
+    sudo apt -y install build-essential dkms linux-headers-$(uname -r)
+
+    apt-get -y install dkms
+    #apt-get -y install virtualbox-guest
+    apt-get -y install virtualbox-guest-dkms
+    apt-get -y install virtualbox-guest-utils    
+    apt-get -y install virtualbox-guest-additions-iso
        
   SHELL
  
@@ -192,25 +225,9 @@ Vagrant.configure("2") do |config|
 
     echo ""  
     echo "creating source directories"
-    mkdir - p /mnt/work/swapmyvote  
+    mkdir -p /mnt/work/manufakture  
+        
     
-    echo ""  
-    echo "registering package repositories"
-    echo "deb http://uk.archive.ubuntu.com/ubuntu/ eoan main restricted universe multiverse"               > /etc/apt/sources.list
-    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ eoan main restricted universe multiverse"           >> /etc/apt/sources.list
-    echo "deb http://uk.archive.ubuntu.com/ubuntu/ eoan-security main restricted universe multiverse"      >> /etc/apt/sources.list
-    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ eoan-security main restricted universe multiverse"  >> /etc/apt/sources.list
-    echo "deb http://uk.archive.ubuntu.com/ubuntu/ eoan-updates main restricted universe multiverse"       >> /etc/apt/sources.list
-    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ eoan-updates main restricted universe multiverse"   >> /etc/apt/sources.list
-    apt-get update
-
-    echo ""  
-    echo "adding apt repository tools"
-    apt-get -y install apt-transport-https ca-certificates
-    apt-get -y install software-properties-common python-software-properties
-    apt-get update
-
-
     echo ""
     echo "updating core linux utils"
     apt-get -y install syslinux
@@ -228,15 +245,7 @@ Vagrant.configure("2") do |config|
     apt-get -y install rc
     #apt-get -y install apt
     #apt-get update
- 
- 
-    echo ""
-    echo "installing virtualbox extensions"
-    apt-get -y install dkms
-    #apt-get -y install virtualbox-guest
-    apt-get -y install virtualbox-guest-dkms
-    apt-get -y install virtualbox-guest-utils    
-    apt-get -y install virtualbox-guest-additions-iso
+
     
   
     echo ""
@@ -307,6 +316,13 @@ Vagrant.configure("2") do |config|
    
    
     echo ""
+    echo "installing Java compilation tools"
+    echo ""
+	apt-get -y update
+	apt -y install openjdk-17-jdk-headless
+   
+   
+    echo ""
     echo "installing grammar parser tools"
     apt-get -y install guile
     apt-get -y install bison
@@ -336,25 +352,96 @@ Vagrant.configure("2") do |config|
     cp /usr/local/bin/pip /usr/bin
     pip install --upgrade pip
     
+
+
+    echo ""
+    echo "installing dependency libs"
+    apt-get -y install libpgf-dev
+    apt-get -y install libpq-dev
+    apt-get -y install libreadline-dev
+    
+    
+    
+    echo ""
+    echo "installing postgresql"
+    apt-get -y install postgresql postgresql-client
+    
+
+    echo ""
+    echo "installing sqlite3"
+    apt-get install libsqlite3-dev
+    
+        
     
     echo ""
     echo "installing ruby development tools"
-    #apt-add-repository ppa:brightbox/ruby-ng
+    
+    # note: rbenv / rvm are not working! we're installing ruby-2.6.5 from source 
+    
+    #apt-add-repository -y ppa:rael-gc/rvm
     #apt-get update
-    #apt-get -y install ruby ruby-dev 
-    #apt-get -y install gems rubygems-integration
-    #apt-get -y install ruby-rails ruby-railties
+    #apt-get -y install rvm rbenv
+    
+    apt-get -y remove rvm
+    rm -f /etc/rvmrc
+    rm -f ~/.rvmrv
+    
+    #export RUBY_CONFIGURE_OPTS="--with-openssl-dir=/usr/lib/ssl" 
+    #rbenv install  2.6.5
+
+
+    # start with the default ruby-2.5 and gems
+    
+    apt-add-repository ppa:brightbox/ruby-ng
+    apt-get update
+    
+    apt-get -y install ruby ruby-dev
+    apt-get -y install gems rubygems-integration
+    apt-get -y install ruby-rails ruby-railties
+    apt-get -y install ruby-builder ruby-bundler
+    
+    
+    # now override and compile ruby-2.6.5 from source
     
     cd /tmp/
     wget -c https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.5.tar.gz
     tar -xzf ruby-2.6.5.tar.gz
     cd ruby-2.6.5
-	./configure --prefix=/usr
-	make
-	make install
+    ./configure --prefix=/usr --with-rubylibprefix=/usr/lib/ruby/2.6.5 --with-openssl-dir=/usr/lib/ssl
+    make
+    make install
     cd /usr/local/bin
 
 
+    
+    echo ""
+    echo "Installing ruby rake and rails"
+    gem install builder:3.2.3
+    gem install bundler:1.17.3
+    gem install rake rails
+
+    
+    
+    
+    echo ""
+    echo "installing yarn ruby webserver"
+    # disabled: we use yarnpkg, not yarn gem
+    #apt-get -y install yarnpkg
+    #gem remove trollop
+    #gem install optimist yarn
+
+    # make sure yarn gem is absent
+    apt-get -y remove yarn
+    apt-get autoremove
+    rm -f /usr/local/bin/yarn
+
+    # istall yarnpkg
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    apt-get update
+    apt-get -y install yarn    
+    
+    
    
     echo ""
     echo "installing oniguruma regexp lib"
@@ -374,9 +461,23 @@ Vagrant.configure("2") do |config|
     echo "installing nodejs engine"
     apt-get -y install nodejs
     apt-get -y install npm
+    cd; touch install_nvm.sh; chmod a+x install_nvm.sh
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh > install_nvm.sh
+    ./install+nvm.sh
+    source ~/.profile
+
  
+    echo ""
+    echo "configuring docker repostories"
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    sudo apt-get update
+       
+    echo ""
+    echo "installing docker engine"
+    apt-get -y install docker.io
+    apt-get -y install composer
     
-            
         
     echo ""
     echo "Done."
