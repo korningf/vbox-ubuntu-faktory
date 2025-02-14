@@ -401,45 +401,45 @@ Vagrant.configure("2") do |config|
     apt-get -y install ruby-builder ruby-bundler
     
     
-    # now override and compile ruby-2.6.5 from source
-    
-    cd /tmp/
-    wget -c https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.5.tar.gz
-    tar -xzf ruby-2.6.5.tar.gz
-    cd ruby-2.6.5
-    ./configure --prefix=/usr --with-rubylibprefix=/usr/lib/ruby/2.6.5 --with-openssl-dir=/usr/lib/ssl
-    make
-    make install
-    cd /usr/local/bin
+#     # now override and compile ruby-2.6.5 from source
+#     
+#     cd /tmp/
+#     wget -c https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.5.tar.gz
+#     tar -xzf ruby-2.6.5.tar.gz
+#     cd ruby-2.6.5
+#     ./configure --prefix=/usr --with-rubylibprefix=/usr/lib/ruby/2.6.5 --with-openssl-dir=/usr/lib/ssl
+#     make
+#     make install
+#     cd /usr/local/bin
 
 
     
-    echo ""
-    echo "Installing ruby rake and rails"
-    gem install builder:3.2.3
-    gem install bundler:1.17.3
-    gem install rake rails
+#     echo ""
+#     echo "Installing ruby rake and rails"
+#     gem install builder:3.2.3
+#     gem install bundler:1.17.3
+#     gem install rake rails
 
     
     
     
-    echo ""
-    echo "installing yarn ruby webserver"
-    # disabled: we use yarnpkg, not yarn gem
-    #apt-get -y install yarnpkg
-    #gem remove trollop
-    #gem install optimist yarn
-
-    # make sure yarn gem is absent
-    apt-get -y remove yarn
-    apt-get autoremove
-    rm -f /usr/local/bin/yarn
-
-    # istall yarnpkg
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-    apt-get update
-    apt-get -y install yarn    
+#     echo ""
+#     echo "installing yarn ruby webserver"
+#     # disabled: we use yarnpkg, not yarn gem
+#     #apt-get -y install yarnpkg
+#     #gem remove trollop
+#     #gem install optimist yarn
+# 
+#     # make sure yarn gem is absent
+#     apt-get -y remove yarn
+#     apt-get autoremove
+#     rm -f /usr/local/bin/yarn
+# 
+#     # istall yarnpkg
+#     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+#     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+#     apt-get update
+#     apt-get -y install yarn    
     
     
    
@@ -457,14 +457,14 @@ Vagrant.configure("2") do |config|
     pip install 'yq < 2.0.0'
     
        
-    echo ""
-    echo "installing nodejs engine"
-    apt-get -y install nodejs
-    apt-get -y install npm
-    cd; touch install_nvm.sh; chmod a+x install_nvm.sh
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh > install_nvm.sh
-    ./install+nvm.sh
-    source ~/.profile
+#     echo ""
+#     echo "installing nodejs engine"
+#     apt-get -y install nodejs
+#     apt-get -y install npm
+#     cd; touch install_nvm.sh; chmod a+x install_nvm.sh
+#     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh > install_nvm.sh
+#     ./install+nvm.sh
+#     source ~/.profile
 
  
     echo ""
@@ -478,6 +478,11 @@ Vagrant.configure("2") do |config|
     apt-get -y install docker.io
     apt-get -y install composer
     
+    
+    echo ""
+    echo "installing AWS=client"
+    apt-get -y install awscli    
+        
         
     echo ""
     echo "Done."
