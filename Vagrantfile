@@ -319,7 +319,18 @@ Vagrant.configure("2") do |config|
     echo "installing Java compilation tools"
     echo ""
 	apt-get -y update
-	apt -y install openjdk-21-jdk-headless
+	apt-get -y install openjdk-21-jdk-headless
+    apt-get -y install maven
+   
+
+    echo ""
+    echo "installing Scala functional language tools"
+ 	apt-get -y install scala
+    
+    
+    echo ""
+    echo "installing R functional language tools"
+    apt-get install -y r-base
    
    
     echo ""
@@ -375,23 +386,6 @@ Vagrant.configure("2") do |config|
     
     echo ""
     echo "installing ruby development tools"
-    
-    # note: rbenv / rvm are not working! we're installing ruby-2.6.5 from source 
-    
-    #apt-add-repository -y ppa:rael-gc/rvm
-    #apt-get update
-    #apt-get -y install rvm rbenv
-    
-    apt-get -y remove rvm
-    rm -f /etc/rvmrc
-    rm -f ~/.rvmrv
-    
-    #export RUBY_CONFIGURE_OPTS="--with-openssl-dir=/usr/lib/ssl" 
-    #rbenv install  2.6.5
-
-
-    # start with the default ruby-2.5 and gems
-    
     apt-add-repository ppa:brightbox/ruby-ng
     apt-get update
     
@@ -399,47 +393,6 @@ Vagrant.configure("2") do |config|
     apt-get -y install gems rubygems-integration
     apt-get -y install ruby-rails ruby-railties
     apt-get -y install ruby-builder ruby-bundler
-    
-    
-#     # now override and compile ruby-2.6.5 from source
-#     
-#     cd /tmp/
-#     wget -c https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.5.tar.gz
-#     tar -xzf ruby-2.6.5.tar.gz
-#     cd ruby-2.6.5
-#     ./configure --prefix=/usr --with-rubylibprefix=/usr/lib/ruby/2.6.5 --with-openssl-dir=/usr/lib/ssl
-#     make
-#     make install
-#     cd /usr/local/bin
-
-
-    
-#     echo ""
-#     echo "Installing ruby rake and rails"
-#     gem install builder:3.2.3
-#     gem install bundler:1.17.3
-#     gem install rake rails
-
-    
-    
-    
-#     echo ""
-#     echo "installing yarn ruby webserver"
-#     # disabled: we use yarnpkg, not yarn gem
-#     #apt-get -y install yarnpkg
-#     #gem remove trollop
-#     #gem install optimist yarn
-# 
-#     # make sure yarn gem is absent
-#     apt-get -y remove yarn
-#     apt-get autoremove
-#     rm -f /usr/local/bin/yarn
-# 
-#     # istall yarnpkg
-#     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-#     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-#     apt-get update
-#     apt-get -y install yarn    
     
     
    
