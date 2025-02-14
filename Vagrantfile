@@ -19,12 +19,12 @@ Vagrant.configure("2") do |config|
   # Image: select virtual machine image (may be architecture specific)
   #--------------------------------------------------------------------------------------#
   # Mac OSX (Intel):
-  # config.vm.box = "ubuntu/focal64"
+  # config.vm.box = "ubuntu/jammy64"
   # 
   # Intel x86-64:
-  # config.vm.box = "ubuntu/focal64"
+  # config.vm.box = "ubuntu/jammy64"
   #======================================================================================#
-  config.vm.box = "ubuntu/focal64"
+  config.vm.box = "ubuntu/jammy64"
 
 
   #======================================================================================#
@@ -59,8 +59,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
      
-     # Custom VM name "ubuntu-focal-manufakture"
-     vb.name = "ubuntu-focal-manufakture"
+     # Custom VM name "ubuntu-jammy-manufakture"
+     vb.name = "ubuntu-jammy-manufakture"
      
      # Display the VirtualBox GUI when booting the machine
      vb.gui = true
@@ -151,12 +151,12 @@ Vagrant.configure("2") do |config|
     
     echo ""  
     echo "registering package repositories"
-    echo "deb http://uk.archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse"               > /etc/apt/sources.list
-    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse"           >> /etc/apt/sources.list
-    echo "deb http://uk.archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse"      >> /etc/apt/sources.list
-    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse"  >> /etc/apt/sources.list
-    echo "deb http://uk.archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse"       >> /etc/apt/sources.list
-    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse"   >> /etc/apt/sources.list
+    echo "deb http://uk.archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse"               > /etc/apt/sources.list
+    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse"           >> /etc/apt/sources.list
+    echo "deb http://uk.archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse"      >> /etc/apt/sources.list
+    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse"  >> /etc/apt/sources.list
+    echo "deb http://uk.archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse"       >> /etc/apt/sources.list
+    echo "deb-src http://uk.archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse"   >> /etc/apt/sources.list
     apt-get update
 
 
@@ -319,7 +319,7 @@ Vagrant.configure("2") do |config|
     echo "installing Java compilation tools"
     echo ""
 	apt-get -y update
-	apt -y install openjdk-17-jdk-headless
+	apt -y install openjdk-21-jdk-headless
    
    
     echo ""
@@ -362,14 +362,14 @@ Vagrant.configure("2") do |config|
     
     
     
-    echo ""
-    echo "installing postgresql"
-    apt-get -y install postgresql postgresql-client
+#    echo ""
+#    echo "installing postgresql"
+#    apt-get -y install postgresql postgresql-client
     
 
-    echo ""
-    echo "installing sqlite3"
-    apt-get install libsqlite3-dev
+#    echo ""
+#    echo "installing sqlite3"
+#    apt-get install libsqlite3-dev
     
         
     
