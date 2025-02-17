@@ -16,6 +16,17 @@
 Vagrant.configure("2") do |config|
 
   #======================================================================================#
+  # Guest: Force a specific version for VirtualBox Guest Additions
+  #--------------------------------------------------------------------------------------#
+  # A version mismatch bug may occur with the Guest Additions (after multiple reinstalls)
+  # Even the Vagrant-vbguest plugin may fail to fix it. Best to override the .iso image.
+  #--------------------------------------------------------------------------------------#
+  # config.vbguest.iso_path = "https://download.virtualbox.org/virtualbox/%{version}/VBoxGuestAdditions_%{version}.iso"
+  #======================================================================================#
+  config.vbguest.iso_path = "https://download.virtualbox.org/virtualbox/%{version}/VBoxGuestAdditions_%{version}.iso"
+
+
+  #======================================================================================#
   # Image: select virtual machine image (may be architecture specific)
   #--------------------------------------------------------------------------------------#
   # Mac OSX (Intel):
