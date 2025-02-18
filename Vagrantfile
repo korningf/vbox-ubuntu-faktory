@@ -525,7 +525,18 @@ Vagrant.configure("2") do |config|
 #    echo ""
 #    echo "installing mysql and postgresql clients"
 #    apt-get -y install myresql-client postgresql-client
-    
+
+
+    # ?
+    # Check this: mssql-cli may require a specific python versiom
+    # see https://pypi.org/project/mssql-cli/
+    # ?
+
+    echo ""
+    echo "installing msqsql client"
+    # apt-get -y install msqql-cli
+    pip install mssql-cli
+
 
 
     #------------------------------------------------------------------------#
