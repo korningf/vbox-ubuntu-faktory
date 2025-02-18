@@ -528,14 +528,19 @@ Vagrant.configure("2") do |config|
 
 
     # ?
-    # Check this: mssql-cli may require a specific python versiom
-    # see https://pypi.org/project/mssql-cli/
+    # Check this: mssql-cli may require a specific python version!
+    #
+    # see: https://pypi.org/project/mssql-cli/
+    # see: https://dbafromthecold.com/2022/05/13/install-mssql-cli-on-ubuntu-22-04/
+    # see: https://github.com/dbcli/mssql-cli/issues/531
     # ?
 
     echo ""
     echo "installing msqsql client"
-    # apt-get -y install msqql-cli
+    pip install --upgrade --force cli_helpers
+    pip install --upgrade --force tabulate
     pip install mssql-cli
+    # apt-get -y install msqql-cli
 
 
 
