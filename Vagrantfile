@@ -71,8 +71,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
      
-     # Custom VM name "ubuntu-jammy-faktory"
-     vb.name = "ubuntu-jammy-faktory"
+     # Custom VM name "vbox-ubuntu-faktory"
+     vb.name = "vbox-ubuntu-faktory"
      
      # Display the VirtualBox GUI when booting the machine
      vb.gui = true
@@ -174,7 +174,8 @@ Vagrant.configure("2") do |config|
 
     echo ""  
     echo "adding apt repository tools"
-    apt-get -y install apt-transport-https ca-certificates curl gpg
+    apt-get -y install apt-transport-https ca-certificates
+    apt-get -y install curl gnupg
     apt-get -y install software-properties-common python-software-properties
     #apt-get -y upgrade
     apt-get update
@@ -310,8 +311,10 @@ Vagrant.configure("2") do |config|
     apt-get -y install openssl
     apt-get -y install openssl-dev
     apt-get -y install stunnel
+
+    # gpg is v1. gnupg is v2
     #apt-get -y install gpg
-    
+    #apt-get -y install gnupg    
 
     # ?
     # Check this - common libraries for FIPS security compliance
@@ -415,7 +418,41 @@ Vagrant.configure("2") do |config|
     #apt-get -y install libreadline-dev
     
 
-    
+    #------------------------------------------------------------------------#
+    # .NET
+    #------------------------------------------------------------------------#
+    # see: https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-install?tabs=dotnet8&pivots=os-linux-ubuntu-2204
+
+    # .NET runtime: pick either .NET or ASP.NET
+    #echo ""
+    #echo "installing .NET runtime"
+    #echo ""
+    #apt-get install -y dotnet-runtime-8.0
+    #apt-get install -y aspnetcore-runtime-8.0
+
+    # .NET SDK comes wit the full runtime
+    echo ""
+    echo "installing .NET SDK and runtime"
+    echo ""
+    apt-get install -y dotnet-host
+    apt-get install -y dotnet-sdk-8.0
+
+    #echo ""
+    #echo "installing .NET msbuild tools"
+    #echo ""
+    #apt-get update
+
+    # Mono
+    echo ""
+    echo "installing .NET Mono cross-platform development"
+    echo ""
+    gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+    echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+    apt update
+
+    apt-get -y install mono-develop
+
+
     #------------------------------------------------------------------------#
     # Java
     #------------------------------------------------------------------------#
@@ -423,7 +460,6 @@ Vagrant.configure("2") do |config|
     echo ""
     echo "installing Java compilation tools"
     echo ""
-    apt-get update
     apt-get -y install openjdk-21-jdk-headless
     apt-get -y install maven
    
