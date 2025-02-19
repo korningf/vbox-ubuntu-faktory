@@ -193,7 +193,7 @@ Vagrant.configure("2") do |config|
 
     apt-get -y install dkms
     #apt-get -y install virtualbox-guest
-    apt-get -y install virtualbox-guest-dkms
+    #apt-get -y install virtualbox-guest-dkms
     apt-get -y install virtualbox-guest-utils    
     apt-get -y install virtualbox-guest-additions-iso
        
@@ -306,10 +306,11 @@ Vagrant.configure("2") do |config|
 
     echo ""
     echo "installing secure network utils"
-    apt-get -y install gnutls
-    apt-get -y install openssh
+    apt-get -y install ssh
     apt-get -y install openssl
-    apt-get -y install openssl-dev
+    apt-get -y install gnutls-bin
+    apt-get -y install libssl-dev
+    apt-get -y install libtls-dev
     apt-get -y install stunnel
 
     # gpg is v1. gnupg is v2
@@ -337,7 +338,7 @@ Vagrant.configure("2") do |config|
 
     echo ""
     echo "installing console tools"
-    apt-get -y install ncurses
+    apt-get -y install libncurses-dev
     apt-get -y install vim
     #apt-get -y install nano
 
@@ -560,7 +561,7 @@ Vagrant.configure("2") do |config|
     
 #    echo ""
 #    echo "installing mysql and postgresql clients"
-#    apt-get -y install myresql-client postgresql-client
+#    apt-get -y install mysql-client postgresql-client
 
 
     # ?
@@ -640,12 +641,14 @@ Vagrant.configure("2") do |config|
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     apt-get update
+
+
     echo ""
-    echo "installing docker engine"
+    echo "installing docker containers"
     apt-get -y install docker.io
 
 
-    # Composer wriiten in php
+    # Composer written in php
 
     apt-get -y install composer
     
@@ -656,12 +659,17 @@ Vagrant.configure("2") do |config|
     # Kubernetes
     #------------------------------------------------------------------------#
 
-    # seems to install from ubuntu-20-xenial instead of ubuntu-22-jammy
+    echo ""
+    echo "configuring kubernetes repostories"
 
+    # seems to install from ubuntu-20-xenial instead of ubuntu-22-jammy
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add
     apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
     apt-get update
 
+    echo ""
+    echo "installing kubernetes clusters"
+    echo ""
     #apt-get install -y containerd
     #apt-get install -y kubeadm kubelet 
 
