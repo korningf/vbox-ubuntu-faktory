@@ -149,6 +149,11 @@ Vagrant.configure("2") do |config|
   # config.vm.provision "shell", "mkdir -p /work/faktory"
   #======================================================================================#
   config.vm.provision "shell", inline: <<-SHELL
+    
+    
+    #========================================================================#
+    # Machine
+    #========================================================================#
 
     echo ""  
     echo "resizing root filesystem"
@@ -160,6 +165,39 @@ Vagrant.configure("2") do |config|
     mkdir -p /vagrant
     mkdir -p /mnt/work
     
+
+
+    #------------------------------------------------------------------------#
+    # DNS
+    #------------------------------------------------------------------------#
+    
+    # sometimes on vbox windows, the local DNS fails to resolve apt repos
+    # the workaround is to ensure we always also check google nameservers
+    
+    echo ""  
+    echo "ensuring DNS nameservers"
+    echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+    echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+
+
+
+    #------------------------------------------------------------------------#
+    # APT keyrings
+    #------------------------------------------------------------------------#
+
+    # ensure we have a directory for external apt repsitory keyrings
+    # /usr/share/keyrings/ for official ubuntu distro apt packages
+    # /etc/apt/keyrings/ for manually installed external packages
+    
+    echo ""
+    echo "ensuring keyring folders"
+    mkdir -p /usr/share/keyrings/
+    mkdir -p /etc/apt/keyrings/
+    
+
+    #------------------------------------------------------------------------#
+    # APT repos
+    #------------------------------------------------------------------------#
     
     echo ""  
     echo "registering package repositories"
@@ -172,30 +210,45 @@ Vagrant.configure("2") do |config|
     apt-get update
 
 
+    #------------------------------------------------------------------------#
+    # APT base
+    #------------------------------------------------------------------------#
+
     echo ""  
     echo "adding apt repository tools"
     apt-get -y install apt-transport-https ca-certificates
-    apt-get -y install curl gnupg
+    apt-get -y install curl gnupg lsb-release
     apt-get -y install software-properties-common python-software-properties
     #apt-get -y upgrade
     apt-get update
 
 
+    #------------------------------------------------------------------------#
+    # base box
+    #------------------------------------------------------------------------#
+
+    # at minimum we will need build-essentials as we want to cross-compile.
+    
     echo ""
-    echo "installing virtualbox extensions"
-    sudo apt -y install build-essential dkms linux-headers-$(uname -r)
+    echo "installing build essentials and headers"
+    sudo apt -y install build-essential linux-headers-$(uname -r)
+    #apt-get -y install dkms
     apt-get update
 
+
+    #------------------------------------------------------------------------#
+    # VBox guest
+    #------------------------------------------------------------------------#
 
     # ?
     # Check This - not sure it's required since we're forcing the version
     # ?
-
-    apt-get -y install dkms
+    
+    echo ""
+    echo "installing virtualbox extensions"
     #apt-get -y install virtualbox-guest
     #apt-get -y install virtualbox-guest-dkms
-    apt-get -y install virtualbox-guest-utils    
-    apt-get -y install virtualbox-guest-additions-iso
+    apt-get -y install virtualbox-guest-utils
        
   SHELL
  
@@ -233,14 +286,13 @@ Vagrant.configure("2") do |config|
   # @see https://wiki.ubuntulinux.org/wiki/Docker
 
   config.vm.provision "shell", inline: <<-SHELL
+
+    #========================================================================#
+    # System
+    #========================================================================#
   
     echo ""
     echo "configuring basic system"
-    cp /vagrant/motd                /etc
-    # todo certificates and credentials
-    # warning: do not overwrite the vagrant credentials (~/.ssh/authorized_keys)
-    # if using an ssh-agent, ssh-keys should already be preloaded (ssh-add -L) 
-            
 
     # ?
     # Check this - this was to copy stuff from the host into the box
@@ -249,11 +301,20 @@ Vagrant.configure("2") do |config|
     echo ""  
     echo "creating source directories"
     mkdir -p /mnt/work/faktory  
+    
+    # motd
+    cp /vagrant/motd                /etc
+
+    
+    # todo certificates and credentials
+    # warning: do not overwrite the vagrant credentials (~/.ssh/authorized_keys)
+    # if using an ssh-agent, ssh-keys should already be preloaded (ssh-add -L) 
+    
         
 
-    #========================================================================#
-    # System
-    #========================================================================#
+    #------------------------------------------------------------------------#
+    # Sysutils
+    #------------------------------------------------------------------------#
 
     #apt-get update
 
@@ -262,6 +323,8 @@ Vagrant.configure("2") do |config|
     apt-get -y install syslinux
     apt-get -y install coreutils
     apt-get -y install util-linux
+    apt-get -y install locate
+    apt-get -y install tree
     #apt-get -y install procps
     #apt-get -y install iotop
         
@@ -339,6 +402,7 @@ Vagrant.configure("2") do |config|
     echo ""
     echo "installing console tools"
     apt-get -y install libncurses-dev
+    apt-get -y install screen
     apt-get -y install vim
     #apt-get -y install nano
 
@@ -405,7 +469,7 @@ Vagrant.configure("2") do |config|
     apt-get -y install bison
     apt-get -y install flex
     apt-get -y install swig
-    apt-get -y install ctags
+    #apt-get -y install ctags
 
 
     echo ""
@@ -420,9 +484,24 @@ Vagrant.configure("2") do |config|
     
 
     #------------------------------------------------------------------------#
-    # .NET
+    # Microsft .NET
     #------------------------------------------------------------------------#
-    # see: https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-install?tabs=dotnet8&pivots=os-linux-ubuntu-2204
+
+    echo ""
+    echo "Configuring Microsoft keyring"
+    echo ""
+    curl -sLS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/keyrings/microsoft.gpg > /dev/null
+    chmod go+r /etc/apt/keyrings/microsoft.gpg
+
+    
+    # microsoft keyring for other packages (azure-cli, vs code) 
+    # dotnet ships with official ubuntu backports distribution
+    
+    echo ""
+    echo "Configuring .NET repository"
+    echo ""
+    add-apt-repository ppa:dotnet/backports
+
 
     # .NET runtime: pick either .NET or ASP.NET
     #echo ""
@@ -443,16 +522,55 @@ Vagrant.configure("2") do |config|
     #echo ""
     #apt-get update
 
-    # Mono
+
+    #------------------------------------------------------------------------#
+    # .NET Mono
+    #------------------------------------------------------------------------#
+
     echo ""
-    echo "installing .NET Mono cross-platform development"
+    echo "Configuring .NET Mono keyring"
     echo ""
-    gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-    echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+    gpg --homedir /tmp --no-default-keyring --keyring /etc/apt/keyrings/mono-keyring --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF    
+    chmod go+r /etc/apt/keyrings/mono-keyring.gpg
+    
+    
+    echo ""
+    echo "Configuring .NET Mono repository"
+    echo ""
+    echo "deb [signed-by=/etc/apt/keyrings/mono-keyring.gpg] https://download.mono-project.com/repo/ubuntu/ stable-focal main" | tee /etc/apt/sources.list.d/mono-complete.list
     apt update
 
-    apt-get -y install mono-develop
+    # Mono
+    echo ""
+    echo "installing .NET Mono develop"
+    echo ""
 
+    # monodevelop (no spaces) is the IDE only
+    # mono-complete is complete IDE + runtime
+    apt-get -y install mono-complete
+
+
+    #------------------------------------------------------------------------#
+    # .NET VSCode
+    #------------------------------------------------------------------------#
+
+    # see: https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-install?tabs=dotnet8&pivots=os-linux-ubuntu-2204
+
+    # disabled for now: this is the VS Code IDE, 
+    # not required and installation is interactive
+    # VS Code is packagesd as just "code"
+    
+    #echo ""
+    #echo "Configuring .NET VisualStudio Code repos"
+    #echo ""
+    #echo "deb [signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" tee /etc/apt/sources.list.d/vscode.list > /dev/null
+
+    ## Code
+    #echo ""
+    #echo "installing .NET VisualStudio Code"
+    #echo ""
+    #apt-get -y install code
+     
 
     #------------------------------------------------------------------------#
     # Java
@@ -471,7 +589,7 @@ Vagrant.configure("2") do |config|
 
     echo ""
     echo "installing Scala functional language tools"
-     apt-get -y install scala
+    apt-get -y install scala
     
     
     #------------------------------------------------------------------------#
@@ -504,19 +622,22 @@ Vagrant.configure("2") do |config|
 
 
     #------------------------------------------------------------------------#
-    # Python (for aws-cli, cloud ops, dev-ops)
+    # Python (for aws-cli, azure-cli, cloud ops, dev-ops)
     #------------------------------------------------------------------------#
 
-    # python required for many tools, including aws-cli
+    # python required for many tools including composer, aws-cli, mssql-client
+    # python env an dpip is a headache - we need to downgrade to 3.8 for mssql
+    # consider using acaconda, which bundles a working user-space python and R
 
     echo ""
     echo "installing python development tools"
-    apt-get -y install python
-    apt-get -y install python-dev
-    apt-get -y install python-pip
-    # patch broken pip by using easy_install
-    easy_install pip
-    cp /usr/local/bin/pip /usr/bin
+
+    # default is python 3.10
+    #apt-get -y install python3
+    apt-get -y install python3-pip
+
+    apt-get -y install python-is-python3
+    
     pip install --upgrade pip
     
 
@@ -527,11 +648,17 @@ Vagrant.configure("2") do |config|
         
     # ruby,gems, rails required for vagrant, puppet
 
+    # the latest ruby was installed from external brightbox repos
+    # it has since been folded into the main ubuntu jammy distro
+    #echo ""
+    #echo "Configuring ruby repository"
+    #apt-add-repository ppa:brightbox/ruby-ng
+    #apt-get update
+    #echo ""
+
     echo ""
     echo "installing ruby development tools"
-    apt-add-repository ppa:brightbox/ruby-ng
-    apt-get update
-    
+    echo ""
     apt-get -y install ruby ruby-dev
     apt-get -y install gems rubygems-integration
     apt-get -y install ruby-rails ruby-railties
@@ -539,7 +666,7 @@ Vagrant.configure("2") do |config|
 
     
     #------------------------------------------------------------------------#
-    # Go-Lang (for docker, cloud-ops, dev-ops)
+    # Go-Lang (for docker, kubernetes, cloud-ops, dev-ops)
     #------------------------------------------------------------------------#
 
     
@@ -556,12 +683,50 @@ Vagrant.configure("2") do |config|
 
 
     #------------------------------------------------------------------------#
+    # Certificates, Credentials, Secrets 
+    #------------------------------------------------------------------------#
+
+    # TODO certs, keys
+
+
+    #------------------------------------------------------------------------#
+    # Users, Groups, Roles 
+    #------------------------------------------------------------------------#
+
+    # TODO technical accounts
+    
+    
+
+    #------------------------------------------------------------------------#
+    # NGinx webserver 
+    #------------------------------------------------------------------------#
+
+    # we may need nginx for ingress, proxy, certificates, virtual hosts
+    
+    apt-get -y install nginx
+    
+
+    #------------------------------------------------------------------------#
+    # Kestrel webapps
+    #------------------------------------------------------------------------#
+
+    # see: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx
+    # see: https://www.f5.com/company/blog/nginx/tutorial-proxy-net-core-kestrel-nginx-plus#kestrel
+
+    # Kestrel is a pure >NET drop-in replacement for IIS minus junk.
+    # kestrel should already be installed as part of donet core SDK.
+    # invoking dotnet restore should build a skeleton kestral webapp
+
+
+
+
+    #------------------------------------------------------------------------#
     # Databases
     #------------------------------------------------------------------------#
     
-#    echo ""
-#    echo "installing mysql and postgresql clients"
-#    apt-get -y install mysql-client postgresql-client
+    #echo ""
+    #echo "installing mysql and postgresql clients"
+    #apt-get -y install mysql-client postgresql-client
 
 
     # ?
@@ -577,22 +742,22 @@ Vagrant.configure("2") do |config|
     pip install --upgrade --force cli_helpers
     pip install --upgrade --force tabulate
     pip install mssql-cli
-    # apt-get -y install msqql-cli
-
+    # apt-get -y install mssql-cli
+    
 
 
     #------------------------------------------------------------------------#
     # Node.js
     #------------------------------------------------------------------------#
 
-#     echo ""
-#     echo "installing nodejs engine"
-#     apt-get -y install nodejs
-#     apt-get -y install npm
-#     cd; touch install_nvm.sh; chmod a+x install_nvm.sh
-#     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh > install_nvm.sh
-#     ./install+nvm.sh
-#     source ~/.profile
+    #echo ""
+    #echo "installing nodejs engine"
+    #apt-get -y install nodejs
+    #apt-get -y install npm
+    #cd; touch install_nvm.sh; chmod a+x install_nvm.sh
+    #curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh > install_nvm.sh
+    #./install+nvm.sh
+    #source ~/.profile
 
 
 
@@ -639,7 +804,7 @@ Vagrant.configure("2") do |config|
     echo ""
     echo "configuring docker repostories"
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu/ jammy stable"
     apt-get update
 
 
@@ -659,6 +824,8 @@ Vagrant.configure("2") do |config|
     # Kubernetes
     #------------------------------------------------------------------------#
 
+    # kubernetes written in go
+    
     echo ""
     echo "configuring kubernetes repostories"
 
@@ -691,11 +858,34 @@ Vagrant.configure("2") do |config|
     #------------------------------------------------------------------------#
 
     echo ""
-    echo "installing AWS=client"
+    echo "installing Amazon AWS-client"
     apt-get -y install awscli    
         
-        
 
+        
+    #------------------------------------------------------------------------#
+    # Azure cloud
+    #------------------------------------------------------------------------#
+
+
+    echo ""
+    echo "configuring Microsoft Azure repo"
+    #apt-add-repository "deb [https://packages.microsoft.com/repos/azure-cli/ main"
+    echo "deb [/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ jammy main" | tee /etc/apt/sources.list.d/azure-cli.list
+    
+    echo ""
+    echo "installing Microsoft Azure-client"
+    apt-get -y install azure-cli
+
+
+
+
+    #------------------------------------------------------------------------#
+    # User profiles
+    #------------------------------------------------------------------------#
+
+    # TODO .bash .bashrc .profile, color xterm, ssh, ssh-agent, etc
+     
 
     echo ""
     echo "Done."
