@@ -484,7 +484,7 @@ Vagrant.configure("2") do |config|
     
 
     #------------------------------------------------------------------------#
-    # Microsft .NET
+    # Microsoft .NET
     #------------------------------------------------------------------------#
 
     echo ""
@@ -510,7 +510,7 @@ Vagrant.configure("2") do |config|
     #apt-get install -y dotnet-runtime-8.0
     #apt-get install -y aspnetcore-runtime-8.0
 
-    # .NET SDK comes wit the full runtime
+    # .NET SDK comes with the full runtime
     echo ""
     echo "installing .NET SDK and runtime"
     echo ""
@@ -563,7 +563,7 @@ Vagrant.configure("2") do |config|
     #echo ""
     #echo "Configuring .NET VisualStudio Code repos"
     #echo ""
-    #echo "deb [signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" tee /etc/apt/sources.list.d/vscode.list > /dev/null
+    #echo "deb [signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | tee /etc/apt/sources.list.d/vscode.list > /dev/null
 
     ## Code
     #echo ""
