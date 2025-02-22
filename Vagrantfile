@@ -523,9 +523,9 @@ Vagrant.configure("2") do |config|
     apt-get install -y dotnet-sdk-8.0
 
 
-	# TODO check this
-	# dotnet SDK should ship with msbuild, invoked via `donet msbuild`
-	 
+    # TODO check this
+    # dotnet SDK should ship with msbuild, invoked via `donet msbuild`
+     
     #echo ""
     #echo "installing .NET msbuild tools"
     #echo ""
