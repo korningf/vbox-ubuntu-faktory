@@ -524,7 +524,7 @@ Vagrant.configure("2") do |config|
 
 
 	# TODO check this
-	# dotnt SDK should comve with msbuild, called via `donet msbuild`
+	# dotnet SDK should ship with msbuild, invoked via `donet msbuild`
 	 
     #echo ""
     #echo "installing .NET msbuild tools"
@@ -536,7 +536,7 @@ Vagrant.configure("2") do |config|
     # .NET Mono
     #------------------------------------------------------------------------#
 
-    3 see: https://www.mono-project.com/download/stable/#download-lin
+    # see: https://www.mono-project.com/download/stable/#download-lin
     
     echo ""
     echo "Configuring .NET Mono keyring"
@@ -565,7 +565,7 @@ Vagrant.configure("2") do |config|
     # .NET VSCode
     #------------------------------------------------------------------------#
 
-	# see: https://code.visualstudio.com/docs/setup/linux
+    # see: https://code.visualstudio.com/docs/setup/linux
 
 
     # disabled for now: this is the VS Code IDE, 
