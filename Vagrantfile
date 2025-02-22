@@ -487,20 +487,24 @@ Vagrant.configure("2") do |config|
     # Microsoft .NET
     #------------------------------------------------------------------------#
 
+    # see: https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-install?tabs=dotnet8&pivots=os-linux-ubuntu-2204
+
+    
+    # microsoft keyring for other packages (azure-cli, vs code) 
+    # dotnet ships with official ubuntu backports distribution
+
     echo ""
     echo "Configuring Microsoft keyring"
     echo ""
     curl -sLS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/keyrings/microsoft.gpg > /dev/null
     chmod go+r /etc/apt/keyrings/microsoft.gpg
 
-    
-    # microsoft keyring for other packages (azure-cli, vs code) 
-    # dotnet ships with official ubuntu backports distribution
-    
+
     echo ""
     echo "Configuring .NET repository"
     echo ""
     add-apt-repository ppa:dotnet/backports
+    #apt-get update
 
 
     # .NET runtime: pick either .NET or ASP.NET
@@ -510,6 +514,7 @@ Vagrant.configure("2") do |config|
     #apt-get install -y dotnet-runtime-8.0
     #apt-get install -y aspnetcore-runtime-8.0
 
+
     # .NET SDK comes with the full runtime
     echo ""
     echo "installing .NET SDK and runtime"
@@ -517,16 +522,22 @@ Vagrant.configure("2") do |config|
     apt-get install -y dotnet-host
     apt-get install -y dotnet-sdk-8.0
 
+
+	# TODO check this
+	# dotnt SDK should comve with msbuild, called via `donet msbuild`
+	 
     #echo ""
     #echo "installing .NET msbuild tools"
     #echo ""
-    #apt-get update
 
+ 
 
     #------------------------------------------------------------------------#
     # .NET Mono
     #------------------------------------------------------------------------#
 
+    3 see: https://www.mono-project.com/download/stable/#download-lin
+    
     echo ""
     echo "Configuring .NET Mono keyring"
     echo ""
@@ -554,7 +565,8 @@ Vagrant.configure("2") do |config|
     # .NET VSCode
     #------------------------------------------------------------------------#
 
-    # see: https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-install?tabs=dotnet8&pivots=os-linux-ubuntu-2204
+	# see: https://code.visualstudio.com/docs/setup/linux
+
 
     # disabled for now: this is the VS Code IDE, 
     # not required and installation is interactive
