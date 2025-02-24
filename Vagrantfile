@@ -725,7 +725,7 @@ Vagrant.configure("2") do |config|
     # see: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx
     # see: https://www.f5.com/company/blog/nginx/tutorial-proxy-net-core-kestrel-nginx-plus#kestrel
 
-    # Kestrel is a pure >NET drop-in replacement for IIS minus junk.
+    # Kestrel is a pure .NET drop-in replacement for IIS minus junk.
     # kestrel should already be installed as part of donet core SDK.
     # invoking dotnet restore should build a skeleton kestral webapp
 
