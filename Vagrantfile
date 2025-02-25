@@ -376,7 +376,7 @@ Vagrant.configure("2") do |config|
     apt-get -y install libtls-dev
     apt-get -y install stunnel
 
-    # gpg is v1. gnupg is v2
+    # gpg is v1. gnupg is v2.
     #apt-get -y install gpg
     #apt-get -y install gnupg    
 
@@ -570,7 +570,7 @@ Vagrant.configure("2") do |config|
 
     # disabled for now: this is the VS Code IDE, 
     # not required and installation is interactive
-    # VS Code is packagesd as just "code"
+    # VS Code is packaged as just "code"
     
     #echo ""
     #echo "Configuring .NET VisualStudio Code repos"
@@ -639,7 +639,7 @@ Vagrant.configure("2") do |config|
 
     # python required for many tools including composer, aws-cli, mssql-client
     # python env an dpip is a headache - we need to downgrade to 3.8 for mssql
-    # consider using acaconda, which bundles a working user-space python and R
+    # consider using anaconda, which bundles a working user-space python and R
 
     echo ""
     echo "installing python development tools"
@@ -658,7 +658,7 @@ Vagrant.configure("2") do |config|
     # Ruby (for vagrant, puppet, cloud ops, dev-ops)
     #------------------------------------------------------------------------#
         
-    # ruby,gems, rails required for vagrant, puppet
+    # ruby, gems, rails required for vagrant, puppet
 
     # the latest ruby was installed from external brightbox repos
     # it has since been folded into the main ubuntu jammy distro
